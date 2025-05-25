@@ -17,7 +17,7 @@ import requests
 
 # Ruta local donde se guardará temporalmente el modelo
 model_path = "best_model.keras"
-google_drive_id = "https://drive.google.com/file/d/1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc/view?usp=drive_link"  # <-- reemplaza con tu ID real
+google_drive_id = "https://drive.google.com/file/d/1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc/view?usp=sharing "  # <-- reemplaza con tu ID real
 
 # Descargar modelo desde Google Drive si no existe
 def download_model_from_drive(file_id, destination):
