@@ -12,6 +12,29 @@ st.set_page_config(page_title="Brain Tumor Detection", page_icon=None)
 st.title("Brain Tumor Detection and Clinical Data Entry")
 st.markdown("Please fill in the clinical data first. Then upload MRI image(s) and click 'Start Prediction'.")
 
+import os
+import requests
+
+# Ruta local donde se guardará temporalmente el modelo
+model_path = "best_model.keras"
+google_drive_id = "https://drive.google.com/file/d/1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc/view?usp=drive_link"  # <-- reemplaza con tu ID real
+
+# Descargar modelo desde Google Drive si no existe
+def download_model_from_drive(file_id, destination):
+    if not os.path.exists(destination):
+        st.info("Descargando el modelo... (esto puede tardar unos segundos)")
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        response = requests.get(url)
+        with open(destination, "wb") as f:
+            f.write(response.content)
+        st.success("Modelo descargado correctamente.")
+
+download_model_from_drive(google_drive_id, model_path)
+
+# Cargar modelo desde archivo descargado
+model = tf.keras.models.load_model(model_path)
+
+
 model = tf.keras.models.load_model('C:/Users/DELL/Desktop/FISIO II/PROYECTO FINAL/dataset/DataSet-master/best_model.keras')
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
 
