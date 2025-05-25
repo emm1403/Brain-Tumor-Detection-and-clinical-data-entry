@@ -1,6 +1,6 @@
-streamlit
-tensorflow
-numpy
+tensorflow==2.12.0
 opencv-python
-pillow
+Pillow
+numpy
 reportlab
+streamlit
