@@ -34,8 +34,6 @@ download_model_from_drive(google_drive_id, model_path)
 # Cargar modelo desde archivo descargado
 model = tf.keras.models.load_model(model_path)
 
-
-model = tf.keras.models.load_model('C:/Users/DELL/Desktop/FISIO II/PROYECTO FINAL/dataset/DataSet-master/best_model.keras')
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
 
 recommendations_dict = {
