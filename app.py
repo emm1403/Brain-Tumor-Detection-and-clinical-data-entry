@@ -8,46 +8,38 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from textwrap import wrap
 import os
-import sys
+import requests
 import gdown
 
 st.set_page_config(page_title="Brain Tumor Detection", page_icon=None)
 st.title("Brain Tumor Detection and Clinical Data Entry")
 st.markdown("Please fill in the clinical data first. Then upload MRI image(s) and click 'Start Prediction'.")
 
-# Mostrar versión de Python
-st.write("Versión de Python:", sys.version)
+def download_model_gdown(google_drive_id, destination):
+    url = f"https://drive.google.com/uc?id={google_drive_id}"
+    gdown.download(url, destination, quiet=True)
+    # st.success("Modelo descargado correctamente.")  # Comentado para no mostrar
 
-# Función para descargar archivo grande desde Google Drive usando gdown
-def download_model_with_gdown(file_id, destination):
-    url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, destination, quiet=False)
-
-# Parámetros del modelo
 model_path = "best_model.keras"
 google_drive_id = "1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc"
 
-# Descargar el modelo si no existe
 if not os.path.exists(model_path):
-    st.info("Descargando modelo desde Google Drive con gdown...")
-    try:
-        download_model_with_gdown(google_drive_id, model_path)
-        st.success("Modelo descargado correctamente.")
-    except Exception as e:
-        st.error(f"Error al descargar el modelo: {str(e)}")
+    # st.info("Descargando modelo desde Google Drive con gdown...")  # Comentado para no mostrar
+    download_model_gdown(google_drive_id, model_path)
 
-# Verificar tamaño y existencia del modelo
+# st.write("Tamaño del modelo:", os.path.getsize(model_path))  # Comentado para no mostrar
+# st.write("Ruta completa del modelo:", os.path.abspath(model_path))  # Comentado para no mostrar
+# st.write("¿El archivo existe?", os.path.exists(model_path))  # Comentado para no mostrar
+
 if os.path.exists(model_path):
-    st.write("Tamaño del modelo:", os.path.getsize(model_path), "bytes")
-    st.write("Ruta completa del modelo:", os.path.abspath(model_path))
-    st.success("Modelo encontrado.")
+    # st.success(f"Modelo encontrado.")  # Comentado para no mostrar
     try:
         model = tf.keras.models.load_model(model_path)
-        st.success("Modelo cargado correctamente.")
+        # st.success("Modelo cargado correctamente.")  # Comentado para no mostrar
     except Exception as e:
-        st.error(f"Error al cargar el modelo: {str(e)}")
+        st.error(f"Error al cargar el modelo: {e}")
 else:
-    st.error("El modelo no se ha encontrado tras la descarga.")
+    st.error(f"No se encontró el archivo del modelo en: {model_path}")
 
 
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
