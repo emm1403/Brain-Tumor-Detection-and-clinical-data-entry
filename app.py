@@ -15,22 +15,45 @@ st.markdown("Please fill in the clinical data first. Then upload MRI image(s) an
 import os
 import requests
 
-# Ruta local donde se guardará temporalmente el modelo
+ef download_file_from_google_drive(id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+
+    response = session.get(URL, params={'id': id}, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = {'id': id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    save_response_content(response, destination)    
+    st.success("Modelo descargado correctamente.")
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+    return None
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:  # filter out keep-alive new chunks
+                f.write(chunk)
+
+# Uso:
+
 model_path = "best_model.keras"
 google_drive_id = "1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc"
 
-def download_model_from_drive(file_id, destination):
-    if not os.path.exists(destination):
-        st.info("Descargando el modelo... (esto puede tardar unos segundos)")
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-        response = requests.get(url)
-        with open(destination, "wb") as f:
-            f.write(response.content)
-        st.success("Modelo descargado correctamente.")
+if not os.path.exists(model_path):
+    st.info("Descargando modelo desde Google Drive...")
+    download_file_from_google_drive(google_drive_id, model_path)
 
-download_model_from_drive(google_drive_id, model_path)
-
-st.write("Tamaño del modelo descargado (bytes):", os.path.getsize(model_path))
+st.write("Tamaño del modelo:", os.path.getsize(model_path))
 
 model = tf.keras.models.load_model(model_path)
 
