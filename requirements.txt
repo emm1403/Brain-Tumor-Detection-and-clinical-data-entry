@@ -5,3 +5,4 @@ Pillow
 numpy
 reportlab
 streamlit
+requests
