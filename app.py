@@ -17,7 +17,7 @@ import requests
 
 # Ruta local donde se guardará temporalmente el modelo
 model_path = "best_model.keras"
-google_drive_id = "https://drive.google.com/file/d/1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc/view?usp=sharing "  # <-- reemplaza con tu ID real
+google_drive_id = "1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc"  
 
 # Descargar modelo desde Google Drive si no existe
 def download_model_from_drive(file_id, destination):
@@ -29,10 +29,12 @@ def download_model_from_drive(file_id, destination):
             f.write(response.content)
         st.success("Modelo descargado correctamente.")
 
+# Llamada a la función
 download_model_from_drive(google_drive_id, model_path)
 
 # Cargar modelo desde archivo descargado
 model = tf.keras.models.load_model(model_path)
+
 
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
 
