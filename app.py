@@ -59,6 +59,10 @@ if not os.path.exists(model_path):
 
 st.write("Tamaño del modelo:", os.path.getsize(model_path))
 
+st.write("Ruta completa del modelo:", os.path.abspath(model_path))
+st.write("¿El archivo existe?", os.path.exists(model_path))
+
+
 if os.path.exists(model_path):
     st.success(f"Modelo encontrado en: {model_path}")
     model = tf.keras.models.load_model(model_path)
