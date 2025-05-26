@@ -7,31 +7,30 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from textwrap import wrap
+import os
+import requests
+import sys
 
-st.set_page_config(page_title="Brain Tumor Detection", page_icon=None)
+# Configuración inicial de la app
+st.set_page_config(page_title="Brain Tumor Detection")
 st.title("Brain Tumor Detection and Clinical Data Entry")
 st.markdown("Please fill in the clinical data first. Then upload MRI image(s) and click 'Start Prediction'.")
 
-import os
-import requests
+# Mostrar versión de Python
+st.write("Versión de Python:", sys.version)
 
-import sys
-print(sys.version)
-
-
-def download_file_from_google_drive(id, destination):
+# Funciones para descargar el modelo desde Google Drive
+def download_file_from_google_drive(file_id, destination):
     URL = "https://docs.google.com/uc?export=download"
-
     session = requests.Session()
-
-    response = session.get(URL, params={'id': id}, stream=True)
+    response = session.get(URL, params={'id': file_id}, stream=True)
     token = get_confirm_token(response)
 
     if token:
-        params = {'id': id, 'confirm': token}
+        params = {'id': file_id, 'confirm': token}
         response = session.get(URL, params=params, stream=True)
 
-    save_response_content(response, destination)    
+    save_response_content(response, destination)
     st.success("Modelo descargado correctamente.")
 
 def get_confirm_token(response):
@@ -42,35 +41,33 @@ def get_confirm_token(response):
 
 def save_response_content(response, destination):
     CHUNK_SIZE = 32768
-
     with open(destination, "wb") as f:
         for chunk in response.iter_content(CHUNK_SIZE):
-            if chunk:  # filter out keep-alive new chunks
+            if chunk:
                 f.write(chunk)
 
-# Uso:
-
+# Ruta y ID del modelo en Google Drive
 model_path = "best_model.keras"
 google_drive_id = "1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc"
 
+# Descargar el modelo si no existe localmente
 if not os.path.exists(model_path):
     st.info("Descargando modelo desde Google Drive...")
     download_file_from_google_drive(google_drive_id, model_path)
 
-st.write("Tamaño del modelo:", os.path.getsize(model_path))
-
-st.write("Ruta completa del modelo:", os.path.abspath(model_path))
-st.write("¿El archivo existe?", os.path.exists(model_path))
-
-
+# Mostrar información del archivo
 if os.path.exists(model_path):
-    st.success(f"Modelo encontrado en: {model_path}")
-    model = tf.keras.models.load_model(model_path)
+    st.write("Tamaño del modelo:", os.path.getsize(model_path), "bytes")
+    st.write("Ruta completa del modelo:", os.path.abspath(model_path))
+    st.success("Modelo encontrado.")
+
+    try:
+        model = tf.keras.models.load_model(model_path)
+        st.success("Modelo cargado correctamente.")
+    except Exception as e:
+        st.error(f"Error al cargar el modelo: {str(e)}")
 else:
-    st.error(f"No se encontró el archivo del modelo en: {model_path}")
-
-
-model = tf.keras.models.load_model(model_path)
+    st.error("No se encontró el archivo del modelo.")
 
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
 
