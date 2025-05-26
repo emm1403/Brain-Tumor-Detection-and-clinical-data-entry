@@ -19,7 +19,7 @@ import sys
 print(sys.version)
 
 
-ef download_file_from_google_drive(id, destination):
+def download_file_from_google_drive(id, destination):
     URL = "https://docs.google.com/uc?export=download"
 
     session = requests.Session()
