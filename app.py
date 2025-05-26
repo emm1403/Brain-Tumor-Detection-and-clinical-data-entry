@@ -18,13 +18,13 @@ st.markdown("Please fill in the clinical data first. Then upload MRI image(s) an
 def download_model_gdown(google_drive_id, destination):
     url = f"https://drive.google.com/uc?id={google_drive_id}"
     gdown.download(url, destination, quiet=True)
-    # st.success("Modelo descargado correctamente.")  # Comentado para no mostrar
+    st.success("Modelo descargado correctamente.")  # Comentado para no mostrar
 
 model_path = "best_model.keras"
 google_drive_id = "1KUqfzzkVsBL1pYf5OizRFmJz90RjzaQc"
 
 if not os.path.exists(model_path):
-    # st.info("Descargando modelo desde Google Drive con gdown...")  # Comentado para no mostrar
+    st.info("Descargando modelo desde Google Drive con gdown...")  # Comentado para no mostrar
     download_model_gdown(google_drive_id, model_path)
 
 # st.write("Tamaño del modelo:", os.path.getsize(model_path))  # Comentado para no mostrar
@@ -32,10 +32,10 @@ if not os.path.exists(model_path):
 # st.write("¿El archivo existe?", os.path.exists(model_path))  # Comentado para no mostrar
 
 if os.path.exists(model_path):
-    # st.success(f"Modelo encontrado.")  # Comentado para no mostrar
+    st.success(f"Modelo encontrado.")  # Comentado para no mostrar
     try:
         model = tf.keras.models.load_model(model_path)
-        # st.success("Modelo cargado correctamente.")  # Comentado para no mostrar
+         st.success("Modelo cargado correctamente.")  # Comentado para no mostrar
     except Exception as e:
         st.error(f"Error al cargar el modelo: {e}")
 else:
