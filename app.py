@@ -59,6 +59,13 @@ if not os.path.exists(model_path):
 
 st.write("Tamaño del modelo:", os.path.getsize(model_path))
 
+if os.path.exists(model_path):
+    st.success(f"Modelo encontrado en: {model_path}")
+    model = tf.keras.models.load_model(model_path)
+else:
+    st.error(f"No se encontró el archivo del modelo en: {model_path}")
+
+
 model = tf.keras.models.load_model(model_path)
 
 class_names = ['Glioma Tumour', 'Meningioma Tumour', 'No Tumour', 'Pituitary Tumour']
