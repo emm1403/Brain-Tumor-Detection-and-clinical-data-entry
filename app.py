@@ -15,6 +15,10 @@ st.markdown("Please fill in the clinical data first. Then upload MRI image(s) an
 import os
 import requests
 
+import sys
+print(sys.version)
+
+
 ef download_file_from_google_drive(id, destination):
     URL = "https://docs.google.com/uc?export=download"
 
