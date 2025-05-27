@@ -35,7 +35,7 @@ if os.path.exists(model_path):
     st.success(f"Modelo encontrado.")  # Comentado para no mostrar
     try:
         model = tf.keras.models.load_model(model_path)
-         #st.success("Modelo cargado correctamente.")  # Comentado para no mostrar
+            st.success("Modelo cargado correctamente.")  # Comentado para no mostrar
     except Exception as e:
         st.error(f"Error al cargar el modelo: {e}")
 else:
